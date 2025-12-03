@@ -129,17 +129,15 @@ def build_id_to_job_itv(q_intervenants:Q_Intervenants)->Tuple[int,Tuple[int,int]
 
 
 # %%
-def get_job_itv_from_itv_id(q_intervenants:Q_Intervenants, itv_id:int)->Tuple[int,int]:
+def get_job_itv_from_itv_id(q_intervenants:Q_Intervenants, itv_id:int)->Tuple[JobId,IntervenantId]:
     # obtenir la conversion id (intervenant) -> (job, itv)
     l_id_job_itv = build_id_to_job_itv(q_intervenants)
 
-    # récupérer le (job,itv) qui correspond au itv_id fourni
-    itv_id_job_itv = [ (job, itv) for (id,(job,itv)) in l_id_job_itv if id==itv_id]
+    # récupérer le (job,itv) qui correspond à itv_id fourni à la fonction
+    itv_id_job_itv = [ (job, itv) for (id,(job,itv)) in l_id_job_itv if id==itv_id ]
     if len(itv_id_job_itv)==0:
-        #print("get_job_itv_from_itv_id : (None, None) for itv_id {}".format(itv_id))
         return (None,None)
-    (job,itv) =  itv_id_job_itv[0] 
-    #print("get_job_itv_from_itv_id: {} for itv_id {}".format((job,itv), itv_id))
+    (job,itv) = itv_id_job_itv[0] 
     return (job,itv)
 
 
@@ -176,18 +174,23 @@ def get_next_avail_q(q_intervenants:Q_Intervenants, student:Student, job:int)->i
 
 
 # %%
-def get_next_q_to_load(q_intervenants:Q_Intervenants)->list[Tuple[Id, float]]:
+def xxx_get_next_q_to_load(q_intervenants:Q_Intervenants)->list[Tuple[Id, float]]:
     l_ratio_Qs = [ (itv['id'], round(len(itv['Q'])/itv['batch_size'],2)  ) for job_itv in q_intervenants for itv in job_itv  ]
     return l_ratio_Qs
 
 
 # %%
-def get_next_q_to_load_sorted(q_intervenants:Q_Intervenants)->list[int]:
-    q_id_load_ratio = get_next_q_to_load(q_intervenants)
-    q_load_ratio = [ ratio for (_, ratio) in q_id_load_ratio ]
-    q_load_ratio_idx = np.argsort(np.array(q_load_ratio))
+def get_next_q_to_load_sorted(q_intervenants:Q_Intervenants)->list[IntervenantId]:
 
-    return [ q_id_load_ratio[i] for i in q_load_ratio_idx if q_id_load_ratio[i][1] < 1]
+    # déterminer la liste [(identifiant intervenant, taux de remplissage de Q)]
+    q_id_load_ratio = [ (itv['id'], round(len(itv['Q'])/itv['batch_size'],2)  ) for job_itv in q_intervenants for itv in job_itv  ]
+
+    # classer les index de la liste ci-dessus selon le taux de remplissage de Q
+    q_load_ratio = [ ratio for (_, ratio) in q_id_load_ratio ]
+    q_load_ratio_idx_sorted = np.argsort(np.array(q_load_ratio))
+
+    # retourner la liste des (identifiant intervenant) classée selon leur taux de remplissage de Q
+    return [ q_id_load_ratio[i][0] for i in q_load_ratio_idx_sorted if q_id_load_ratio[i][1] < 1]
 
 
 # %%

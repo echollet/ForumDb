@@ -6,8 +6,11 @@ from typing import TypeAlias
 from typing import Dict, Tuple, Sequence, List
 
 Wishes : TypeAlias = List[int]
+
 Id : TypeAlias = int
 StudentId : TypeAlias = int
+IntervenantId : TypeAlias = int
+JobId : TypeAlias = int
 
 # 
 # Un élève est identifié par un dictionnaire :

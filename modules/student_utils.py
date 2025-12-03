@@ -92,19 +92,17 @@ def get_next_valid_student_choice(students:list[Student], id:int)->int:
 
 
 # %%
-def get_student_for_job_not_visited(students:list[Student], job:Job)->Student|None:
+def get_most_interested_student_for_job(students:list[Student], job:Job)->Student|None:
 
     l_result_student = []
     l_wish_rank_student = []
 
     for student in students:
-        #print("get_student_for_job_not_visited:: processing std {} for job {}".format(student,job))
         std_wishes = student['wishes']
         for wish, wish_rank in zip(std_wishes, range(len(std_wishes))):
             if wish == job:
                 j_yet_visited = [ j for (s,(j,i)) in student['itv_visited'] ]
                 if not job in j_yet_visited:
-                    #print("get_student_for_job_not_visited:: returning {} for job {}".format(student,job))
                     l_result_student.append(student)
                     l_wish_rank_student.append(wish_rank)
 
