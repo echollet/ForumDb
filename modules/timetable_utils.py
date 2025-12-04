@@ -49,7 +49,7 @@ def get_timetable_intervenants(timetable:Timetable, q_intervenants:Q_Intervenant
     l_itv_visits = [ (s, itv_visit) for (s,(itv_visit)) in [ e for slot in timetable for  (_, e) in slot if e != None] ]
 
     time_slots = list({ s for (_,(s,_)) in [ (id, itv_visit) for slot in timetable for id, itv_visit in slot if itv_visit != None ] })
-    print("nb_slots : {}".format(time_slots))
+    #print("nb_slots : {}".format(time_slots))
 
     l_itv_id_job_itv = build_id_to_job_itv(q_intervenants)
     l_ids_itv = [ id for (id,_) in l_itv_id_job_itv]
@@ -72,3 +72,4 @@ def get_timetable_intervenants(timetable:Timetable, q_intervenants:Q_Intervenant
         l_result.append(dict(itv_entries))
 
     return l_result
+# %%

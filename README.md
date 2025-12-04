@@ -37,7 +37,7 @@ L'attribut `itv_visited` est une liste initialement vide utilisée par la suite 
 
 ### Données intervenants
 
-Les données concernant les intervenants sont de la forme :
+Les données concernant les intervenants sont de la forme (fichier `data/2025/intervenants_data.json`):
 
 ```json
 [

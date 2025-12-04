@@ -98,13 +98,15 @@ def get_ordered_avail_q_for_job(q_intervenants:Q_Intervenants, job:int)->list[in
 
 
 # %%
-def xxx_push_student_in_q(q_intervenants:Q_Intervenants, job:int, itv:int, student_id:int)->Q_Intervenants:
+
+# DEPRECATED for itv-driven
+def push_student_in_q(q_intervenants:Q_Intervenants, job:int, itv:int, student_id:int)->Q_Intervenants:
     q_intervenants[job][itv]['Q'].append(student_id)
     return q_intervenants
 
 
 # %%
-def build_id_to_job_itv(q_intervenants:Q_Intervenants)->Tuple[int,Tuple[int,int]]:
+def build_id_to_job_itv(q_intervenants:Q_Intervenants)->Tuple[IntervenantId,Tuple[JobId,IntervenantJobIdx]]:
     """
     [
      [ { <itv-00-data> }, { <itv-01-data> } ],  # intervenants for job 0
@@ -129,7 +131,7 @@ def build_id_to_job_itv(q_intervenants:Q_Intervenants)->Tuple[int,Tuple[int,int]
 
 
 # %%
-def get_job_itv_from_itv_id(q_intervenants:Q_Intervenants, itv_id:int)->Tuple[JobId,IntervenantId]:
+def get_job_itv_from_itv_id(q_intervenants:Q_Intervenants, itv_id:int)->Tuple[JobId,IntervenantJobIdx]:
     # obtenir la conversion id (intervenant) -> (job, itv)
     l_id_job_itv = build_id_to_job_itv(q_intervenants)
 
@@ -142,6 +144,8 @@ def get_job_itv_from_itv_id(q_intervenants:Q_Intervenants, itv_id:int)->Tuple[Jo
 
 
 # %%
+
+# DEPRECATED for itv-driven
 def push_student_in_q_id(q_intervenants:Q_Intervenants, itv_id:int, student_id:int)->Q_Intervenants:
 
     # obtenir la conversion id (intervenant) -> (job, itv)
@@ -174,7 +178,9 @@ def get_next_avail_q(q_intervenants:Q_Intervenants, student:Student, job:int)->i
 
 
 # %%
-def xxx_get_next_q_to_load(q_intervenants:Q_Intervenants)->list[Tuple[Id, float]]:
+
+# DEPRECATED for itv-driven
+def get_next_q_to_load(q_intervenants:Q_Intervenants)->list[Tuple[Id, float]]:
     l_ratio_Qs = [ (itv['id'], round(len(itv['Q'])/itv['batch_size'],2)  ) for job_itv in q_intervenants for itv in job_itv  ]
     return l_ratio_Qs
 

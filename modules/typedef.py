@@ -10,6 +10,7 @@ Wishes : TypeAlias = List[int]
 Id : TypeAlias = int
 StudentId : TypeAlias = int
 IntervenantId : TypeAlias = int
+IntervenantJobIdx : TypeAlias = int
 JobId : TypeAlias = int
 
 # 
