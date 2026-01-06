@@ -69,15 +69,17 @@ Initialiser une liste des élèves sous Excel avec les colonnes :
 - liste déroulante pour le choix 1,
 - liste déroulante pour le choix 2, etc.
 
-Ce fichier Excel est ensuite partagé via GoogleDrive.
+Voir [Excel liste déroulante](https://support.microsoft.com/fr-fr/office/cr%C3%A9er-une-liste-d%C3%A9roulante-7693307a-59ef-400a-b769-c5402dce407b)
 
-Lorsque le fichier est retourné renseigné, il permet d'initialiser la table `Student` de la base de données SQLite dédiée au forum de l'année concernée. Par exemple, pour 2026, `data/2026/db-forum-notebook-20-itv-driven-2026.db`.
+Ce fichier Excel est ensuite partagé via [GoogleDrive](https://drive.google.com/drive/home).
 
-Après avoir effectué une copie de sauvegarde du fichier Excel renseigné avec le choix des élèves, il faut transformer le libellé de choix des élèves en numéro de catégorie de métiers puis renseigner la table `Student` de la base.
+Lorsque le fichier est retourné renseigné (après avoir effectué une copie de sauvegarde du fichier Excel renseigné avec le choix des élèves), il faut :
+- transformer le libellé de choix des élèves en numéro de catégorie de métiers,
+- initialiser la table `Student` de la base de données SQLite avec les données. 
 
 Les choix des élèves sont ensuite renseignés dans le fichier : `data/2026/data-2026.json` (pour l'année 2026) en exploitant la vue `VIEW_EXPORT_STUDENT_WISHES_JSON`.
 
-Le contenu de ce fichier `.json` est de la forme suivante :
+Le contenu de ce fichier `.json` doit avoir la forme suivante :
 
 ```json
 [
