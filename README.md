@@ -13,47 +13,32 @@ Il existe 3 notebooks avec différentes stratégies :
 - `forum-20-std-driven.ipynb` : ce notebook affecte les élèves à des intervenants en accordant la priorité au choix des élèves,
 - `forum-20-itv-driven.ipynb` : ce notebook affecte les élèves à des intervenants en remplissant de façon équilibrée la file d'attente des intervenants et en tenant compte préférentiellement des choix des élèves. C'est cette stratégie qui s'est montrée la plus efficace en terme de taux de satisfaction du choix des élèves et de taux d'inactivité des intervenants (réduit à 0 en 2025).
 
-### Données élèves
-
-Les choix des élèves sont renseignés dans le fichier : `data/2025/data-2025.json` (pour l'année 2025).
-
-Le contenu de ce fichier est de la forme suivante :
-
-```json
-[
-{"id": 3100	, "wishes": [ 8, 3,	7, 6,  9  ], "itv_visited": [] },
-{"id": 3101	, "wishes": [ 3, 7,	6, 19, 11 ], "itv_visited": [] },
-
-]
-```
-
-L'attribut `id` est affecté à chacun des élèves. Les 2 premiers digits représentent la dénomination de la classe de l'élève (exemple : 3ème2 => 32xx). Les deux derniers digits permettent d'identifier un élève dans une classe donnée.
-
-L'attribut `wishes` représente le choix d'un élève. C'est une liste remplie avec les numéros de métier placés par ordre de préférence décroissante. 
-
-La numération des métiers démarre à 1 (et non pas à 0). La valeur 0 indique une absence de choix. Par ailleurs, cela simplifie le remplissage des formulaires de choix.
-
-L'attribut `itv_visited` est une liste initialement vide utilisée par la suite par les algorithmes. 
 
 ### Données intervenants
+
+Renseigner les données des intervenants dans la table `Intervenants` de la base de données (par exemple, pour 2026, `data/2026/db-forum-notebook-20-itv-driven-2026.db`).
+
+Bien que chaque intervenant ait un identifiant (`id`), la véritable identification d'un intervenant est définie par l'attribut `id_timetable` établi manuellement à partir de la catégorie (`categori`) puis d'une numéro séquenciel pour cet intervenant dans la catégorie.
+
+En parallèle du contenu de la base de donnée, un fichier `.json` est initialisé avec le profil du nombre d'intervenants par catégorie de métiers.
 
 Les données concernant les intervenants sont de la forme (fichier `data/2025/intervenants_data.json`):
 
 ```json
 [
-  [],
+  [],                                     # métier 0 inutilisé
   [
-    { "id" : 10, "batch_size":4},
-    { "id" : 11, "batch_size":4},
-    { "id" : 12, "batch_size":4}
+    { "id" : 10, "batch_size":4},         # métier 1 (intervenant 0 : 1-0)
+    { "id" : 11, "batch_size":4},         # métier 1 (intervenant 1 : 1-1)
+    { "id" : 12, "batch_size":4}          # métier 1 (intervenant 2 : 1-2)
   ],
   [ 
-    { "id" : 20, "batch_size":4},
-    { "id" : 21, "batch_size":4}
+    { "id" : 20, "batch_size":4},         # métier 2 (intervenant 0 : 2-0)
+    { "id" : 21, "batch_size":4}          # métier 2 (intervenant 1 : 2-1)
   ],
   [ 
-    { "id" : 30, "batch_size":4},
-    { "id" : 31, "batch_size":4}
+    { "id" : 30, "batch_size":4},         # métier 3 (intervenant 0 : 3-0)
+    { "id" : 31, "batch_size":4}          # métier 3 (intervenant 1 : 3-1)
   ],
 
 ]
@@ -67,10 +52,50 @@ Ces listes correspondent aux métiers 1, 2, 3,...
 
 Chaque intervenant est caractérisé par :
 
-- un identifiant `id`,
-- une taille de groupe pour chaque slot de visite `batch_size`.
+- un identifiant `id`, (en réalité inutilisé, cet identifiant n'a pas besoin d'être celui de l'attribut `id` de la table `Intervenants` de la base),
+- une taille de groupe pour chaque slot de visite par intervenant `batch_size`.
 
 Sur l'exemple ci-dessus, le métier N° 1 est représenté par 3 intervenants ayant chacun une taille de groupe max positionnée à 4.
+
+Le nom de fichier `data/<année>/intervenants_data.json` doit être renseigné dans le notebook `forum-20-itv-driven.ipynb` dans la cellule chargeant les données réelles.
+
+
+### Données élèves
+
+Initialiser une liste des élèves sous Excel avec les colonnes :
+
+- identifiant élève : identifiant de la forme : `3xnn` avec `x` le numéro de classe et `nn` le numéro d'ordre de l'élève, 
+- nom de l'élève,
+- liste déroulante pour le choix 1,
+- liste déroulante pour le choix 2, etc.
+
+Ce fichier Excel est ensuite partagé via GoogleDrive.
+
+Lorsque le fichier est retourné renseigné, il permet d'initialiser la table `Student` de la base de données SQLite dédiée au forum de l'année concernée. Par exemple, pour 2026, `data/2026/db-forum-notebook-20-itv-driven-2026.db`.
+
+Après avoir effectué une copie de sauvegarde du fichier Excel renseigné avec le choix des élèves, il faut transformer le libellé de choix des élèves en numéro de catégorie de métiers puis renseigner la table `Student` de la base.
+
+Les choix des élèves sont ensuite renseignés dans le fichier : `data/2026/data-2026.json` (pour l'année 2026) en exploitant la vue `VIEW_EXPORT_STUDENT_WISHES_JSON`.
+
+Le contenu de ce fichier `.json` est de la forme suivante :
+
+```json
+[
+{"id": 3100	, "wishes": [ 8, 3,	7, 6,  9  ], "itv_visited": [] },
+{"id": 3101	, "wishes": [ 3, 7,	6, 19, 11 ], "itv_visited": [] },
+...
+]
+```
+
+L'attribut `id` est affecté à chacun des élèves. Les 2 premiers digits représentent la dénomination de la classe de l'élève (exemple : 3ème2 => 32xx). Les deux derniers digits permettent d'identifier un élève dans une classe donnée.
+
+L'attribut `wishes` représente le choix d'un élève. C'est une liste remplie avec les numéros de métier placés par ordre de préférence décroissante. 
+
+La numération des métiers démarre à 1 (et non pas à 0). La valeur 0 indique une absence de choix. Par ailleurs, cela simplifie le remplissage des formulaires de choix.
+
+L'attribut `itv_visited` est une liste initialement vide utilisée par la suite par les algorithmes. 
+
+Le nom de fichier `data/<année>/data-<année>.json` doit être renseigné dans le notebook `forum-20-itv-driven.ipynb` dans la cellule chargeant les données réelles.
 
 
 ### Données produites

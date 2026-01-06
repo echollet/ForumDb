@@ -115,9 +115,9 @@ def build_id_to_job_itv(q_intervenants:Q_Intervenants)->Tuple[IntervenantId,Tupl
     ] 
     ->
     [ 
-        (00 , (0,0)),  # intervenant job 0 - itv 0
-        (01 , (0,1)),  # intervenant job 0 - itv 1
-        (10 , (1,0)),  # intervenant job 1 - itv 0
+        (id-xx , (0,0)),  # intervenant job 0 - itv 0
+        (id-yy , (0,1)),  # intervenant job 0 - itv 1
+        (id-zz , (1,0)),  # intervenant job 1 - itv 0
         ...
     ]
     """
