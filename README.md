@@ -14,12 +14,14 @@ Il existe 3 notebooks avec différentes stratégies :
 - `forum-20-itv-driven.ipynb` : ce notebook affecte les élèves à des intervenants en remplissant de façon équilibrée la file d'attente des intervenants et en tenant compte préférentiellement des choix des élèves. C'est cette stratégie qui s'est montrée la plus efficace en terme de taux de satisfaction du choix des élèves et de taux d'inactivité des intervenants (réduit à 0 en 2025).
 
 
+
 ### Données intervenants
 
 Renseigner les données des intervenants dans la table `Intervenants` de la base de données (par exemple, pour 2026, `data/2026/db-forum-notebook-20-itv-driven-2026.db`).
 
 Bien que chaque intervenant ait un identifiant (`id`), la véritable identification d'un intervenant est définie par l'attribut `id_timetable` établi manuellement à partir de la catégorie (`categori`) puis d'une numéro séquenciel pour cet intervenant dans la catégorie.
 
+(Obsolète)
 En parallèle du contenu de la base de donnée, un fichier `.json` est initialisé avec le profil du nombre d'intervenants par catégorie de métiers.
 
 Les données concernant les intervenants sont de la forme (fichier `data/2025/intervenants_data.json`):
@@ -77,6 +79,7 @@ Lorsque le fichier est retourné renseigné (après avoir effectué une copie de
 - transformer le libellé de choix des élèves en numéro de catégorie de métiers,
 - initialiser la table `Student` de la base de données SQLite avec les données. 
 
+(Obsolète)
 Les choix des élèves sont ensuite renseignés dans le fichier : `data/2026/data-2026.json` (pour l'année 2026) en exploitant la vue `VIEW_EXPORT_STUDENT_WISHES_JSON`.
 
 Le contenu de ce fichier `.json` doit avoir la forme suivante :
@@ -104,7 +107,7 @@ Le nom de fichier `data/<année>/data-<année>.json` doit être renseigné dans 
 
 Les notebooks `forum-20-*-driven-*.ipynb` produisent un fichier `.csv` destiné à être importé dans une base SQLite. 
 
-Par exemple, le notebook `forum-20-itv-driven.ipynb` produit le fichier `output_timetable_students_itv_drivent.csv` contenant la timetable des visites.
+Par exemple, le notebook `forum-20-itv-driven-sql.ipynb` produit le fichier `output_timetable_students_itv_driven_<yyyy>_from_sql.csv` contenant la timetable des visites.
 
 Ce fichier permet de renseigner la table `Timetable` de la base SQLite `db-forum-notebook-20-*-driven.db`.
 
