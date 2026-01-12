@@ -24,7 +24,7 @@ def timetable_student_view(timetable:Timetable)->list[Tuple[StudentId,list[Tuple
             (std_id, (slot,(j,i)))= student_slot_itv_visit
             d_result[std_id].append("{}-{}".format(j,i))
 
-    print(d_result)
+    #print(d_result)
     return d_result
 
 
