@@ -1,3 +1,12 @@
 data/2025/*.db
 data/2026/*.db
+data/2026/batch1
+data/2026/batch2
+
 modules/__pycache__/
+*.csv
+*.xlsx
+*.json
+*.bak
+
+data/2026/db-forum-notebook-20-itv-driven-2026.ok.sql
