@@ -55,11 +55,7 @@ Student : TypeAlias = dict[str,any]
 #
 # avec 
 # 
-# id : identifiant de l'intervenant sur 2 digit - premier digit rang de métier et second digit rang de l'intervenant
-# id = 10   => métier 1 - premier intervenant
-# id = 11   => métier 1 - second intervenant
-# id = 20   => métier 2 - premier intervenant
-# 
+# id : identifiant de l'intervenant 
 # batch_size : nombre d'élève par slot de visite
 #  
 
