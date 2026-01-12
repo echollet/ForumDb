@@ -19,12 +19,9 @@ def timetable_student_view(timetable:Timetable)->list[Tuple[StudentId,list[Tuple
 
     for timeslot in timetable:
         for student_slot_itv_visit in timeslot:
-            #(std_id, visit)= student_slot_itv_visit
-            #d_result[std_id].append(visit)
             (std_id, (slot,(j,i)))= student_slot_itv_visit
             d_result[std_id].append("{}-{}".format(j,i))
 
-    #print(d_result)
     return d_result
 
 
