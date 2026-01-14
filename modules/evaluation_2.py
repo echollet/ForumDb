@@ -7,10 +7,10 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from modules.typedef import *
+from modules.typedef_2 import *
 
-from modules.student_utils import get_copy_students
-from modules.timetable_utils import get_timetable_intervenants
+from modules.student_utils_2 import get_copy_students
+from modules.timetable_utils_2 import get_timetable_intervenants
 
 
 # %%
@@ -61,7 +61,7 @@ def get_evaluation(timetable:Timetable, students:list[Student], q_intervenants:Q
     x = 0.5 + np.arange(len(y))
 
     # plot
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(5, 3))
 
     ax.bar(x, y, width=1, edgecolor="white", linewidth=0.7)
 
