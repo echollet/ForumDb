@@ -9,10 +9,11 @@ Ce fichier décrit l'utilisation d'un jupyter notebook pour la mise au point du 
 
 Il existe 3 notebooks avec différentes stratégies :
 
-- `forum-20.ipynb` : ce notebook met en place des groupes les plus homogènes possibles et affecte ensuite les groupes à des intervenants par timeslot,
-- `forum-20-std-driven.ipynb` : ce notebook affecte les élèves à des intervenants en accordant la priorité au choix des élèves,
-- `forum-20-itv-driven.ipynb` : ce notebook affecte les élèves à des intervenants en remplissant de façon équilibrée la file d'attente des intervenants et en tenant compte préférentiellement des choix des élèves. C'est cette stratégie qui s'est montrée la plus efficace en terme de taux de satisfaction du choix des élèves et de taux d'inactivité des intervenants (réduit à 0 en 2025).
+- (deprecated) `forum-20.ipynb` : ce notebook met en place des groupes les plus homogènes possibles et affecte ensuite les groupes à des intervenants par timeslot,
+- (deprecated) `forum-20-std-driven.ipynb` : ce notebook affecte les élèves à des intervenants en accordant la priorité au choix des élèves,
+- (deprecated) `forum-20-itv-driven.ipynb` : ce notebook affecte les élèves à des intervenants en remplissant de façon équilibrée la file d'attente des intervenants et en tenant compte préférentiellement des choix des élèves. C'est cette stratégie qui s'est montrée la plus efficace en terme de taux de satisfaction du choix des élèves et de taux d'inactivité des intervenants (réduit à 0 en 2025).
 
+- `forum-20-itv-driven-sql-2.ipynb` : ce notebook reprend le principe de `forum-20-itv-driven.ipynb` sans besoin de renseigner des fichiers JSON en entrée. Ce notebook utilise directement les données qui sont stockées en base de données SQL (au 23-01-2026 : `./data/2026/db-forum-notebook-20-itv-driven-2026-test.db`)
 
 
 ### Données intervenants

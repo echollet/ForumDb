@@ -29,14 +29,14 @@ def get_sql_intervenants(conn)->list[Job_Intervenants]:
 
     cur = conn.cursor()
     intervenants_raw_data = []
-    for row in cur.execute("SELECT * FROM Intervenants"):
+    for row in cur.execute("SELECT * FROM Intervenants WHERE confirm IS NOT NULL"):
         intervenants_raw_data.append({ 
             "id" :          row[IntervenantsColumns.ID.value], 
             "metier" :      row[IntervenantsColumns.METIER_CAT.value], 
             "id_metier" :   row[IntervenantsColumns.ID_METIER.value], 
             "batch_size":   row[IntervenantsColumns.BATCH_SIZE.value]
             })
-    res = cur.execute("SELECT MAX(categori) FROM Intervenants")
+    res = cur.execute("SELECT MAX(categori) FROM Intervenants WHERE confirm IS NOT NULL")
     max_metier = res.fetchone()[0]
     intervenants_data_from_sql= []
 
