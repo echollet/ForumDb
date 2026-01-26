@@ -302,3 +302,24 @@ Le password à utiliser est la valeur du token fourni au lancement du serveur ju
 
 
 Confirmer ensuite les informations retournées par VSCode et sélectionner le kernel que VSCode a pu détecter.
+
+
+## Mise en forme des données en sortie
+
+A partir du fichier `.csv` produit en sortie, importer ce fichier sous Excel.
+
+Recopier le tableau dans la table `Timetable` de la base de données.
+
+Exporter la vue `VIEW_TIMETABLE_DETAILS` (format `.csv`, `UTF-8`) dans un fichier `.csv`.
+
+Importer ce fichier dans [Google Spreadsheet](https://docs.google.com/spreadsheets).
+
+Vérifier la mise en forme et le contenu des données.
+
+Exporter le fichier via : Fichier / Télécharger / Microsoft Excel.
+
+Dans le fichier Excel, dans la première cellule indiquant un nom d'intervenant avec son métier et la salle associée, double-cliquer sur cette cellule pour accéder à son contenu puis sortir de la cellule sans rien modifier. Le format d'affichage de la cellule affiche les retours chariot.
+
+Utiliser l'outil "pinceau" de mise en forme pour copier la mise en forme de cette cellule à l'ensemble des autres cellules indiquant les informations d'un intervenant.
+
+Mettre en forme le tableau et sauvegarder.
