@@ -306,6 +306,8 @@ Confirmer ensuite les informations retournées par VSCode et sélectionner le ke
 
 ## Mise en forme des données en sortie
 
+### Timetable pour les élèves
+
 A partir du fichier `.csv` produit en sortie, importer ce fichier sous Excel.
 
 Recopier le tableau dans la table `Timetable` de la base de données.
@@ -323,3 +325,11 @@ Dans le fichier Excel, dans la première cellule indiquant un nom d'intervenant 
 Utiliser l'outil "pinceau" de mise en forme pour copier la mise en forme de cette cellule à l'ensemble des autres cellules indiquant les informations d'un intervenant.
 
 Mettre en forme le tableau et sauvegarder.
+
+### Timetable pour les intervenants
+
+Pré-requis : la table `Timetable` de la base de données a été renseignée selon [Timetable pour les élèves](#Timetable-pour-les-élèves)
+
+Faire un copier/coller de la vue `VIEW_TIMETABLE_INTERVENANTS_STUDENTS_PER_SLOT` dans Excel.
+
+Dans Excel sélectionner toutes les colonnes et faire un ajustement en hauteur et en largeur.
