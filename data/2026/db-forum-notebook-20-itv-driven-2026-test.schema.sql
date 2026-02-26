@@ -6,7 +6,6 @@ CREATE VIEW VIEW_nb_intervenants_confirm_per_categori AS SELECT categorie,
  WHERE confirm IS NOT NULL
  GROUP BY categori
 /* VIEW_nb_intervenants_confirm_per_categori(categorie,"count( * )") */;
-CREATE TABLE Intervenants (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, titre TEXT, nom TEXT, confirm INTEGER, categori REFERENCES Catégorie (id), id_timetable TEXT, salle TEXT);
 CREATE TABLE Student (id INTEGER PRIMARY KEY NOT NULL, nom TEXT, c1 TEXT, c2 TEXT, c3 TEXT, c4 TEXT, c5 TEXT, classe TEXT);
 CREATE VIEW VIEW_Intervenants_Cat AS SELECT 
 Intervenants.id_timetable,
@@ -168,6 +167,37 @@ FROM Student
        Timetable ON (Student.id==Timetable.groupe_id)
  WHERE Student.id > 3000
 /* VIEW_TIMETABLE_DETAILS(classe,id,nom,c1,c2,c3,c4,c5,S0,S1,S2,S3,S4,S5) */;
+CREATE VIEW VIEW_TIMETABLE_INTERVENANTS AS WITH confirmed_intervenants AS (
+    SELECT * FROM Intervenants WHERE confirm = 'true' ORDER BY categori
+)
+
+SELECT 
+    A.nom || CHAR(13) || CHAR (10) || A.titre || CHAR(13) || CHAR(10) ||'Salle :' ||  A.salle Intervenants,
+    A.id_timetable,
+    A.categori,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot0 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot0 = A.id_timetable) END Slot_0,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot1 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot1 = A.id_timetable) END Slot_1,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot2 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot2 = A.id_timetable) END Slot_2,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot3 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot3 = A.id_timetable) END Slot_3,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot4 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot4 = A.id_timetable) END Slot_4,
+    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot5 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot5 = A.id_timetable) END Slot_5
+
+FROM confirmed_intervenants A
+/* VIEW_TIMETABLE_INTERVENANTS(Intervenants,id_timetable,categori,Slot_0,Slot_1,Slot_2,Slot_3,Slot_4,Slot_5) */;
+CREATE VIEW VIEW_STUDENT_CHOICES AS SELECT
+ A.id,
+ A.nom,
+ (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c1) C1,
+ (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c2) C2,
+ (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c3) C3,
+ (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c4) C4,
+ (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c5) C5 
+FROM STUDENT A
+/* VIEW_STUDENT_CHOICES(id,nom,C1,C2,C3,C4,C5) */;
+CREATE VIEW VIEW_EXPORT_STUDENT_WISHES_JSON AS SELECT '{"id" : ' || A.id || ', "wishes" : [' || A.c1 || ',' || A.c2 || ',' || A.c3 || ',' || A.c4 || ',' || A.c5 || '], "itv_visited" : [] },' json_data
+  FROM STUDENT A
+/* VIEW_EXPORT_STUDENT_WISHES_JSON(json_data) */;
+CREATE TABLE Intervenants (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, titre TEXT, nom TEXT, confirm INTEGER, categori REFERENCES Catégorie (id), id_timetable TEXT, salle TEXT, batch_size INTEGER);
 CREATE VIEW VIEW_STUDENT_SATISFACTION AS WITH timetable_categories AS (
 SELECT 
     Student.classe,
@@ -202,7 +232,7 @@ SELECT
     B.c3,
     B.c4,
     B.c5,
-    (B.c1 IN 
+    ((SELECT categorie FROM Catégorie WHERE id =B.c1) IN 
         (
             SELECT s1 FROM timetable_categories WHERE id == B.id            UNION 
             SELECT s2 FROM timetable_categories WHERE id == B.id            UNION 
@@ -212,7 +242,7 @@ SELECT
             SELECT s6 FROM timetable_categories WHERE id == B.id           
         )
     ) c1_visited,
-    (B.c2 IN 
+    ((SELECT categorie FROM Catégorie WHERE id =B.c2) IN 
         (
             SELECT s1 FROM timetable_categories WHERE id == B.id            UNION 
             SELECT s2 FROM timetable_categories WHERE id == B.id            UNION 
@@ -222,7 +252,7 @@ SELECT
             SELECT s6 FROM timetable_categories WHERE id == B.id            
         )
     ) c2_visited,
-    (B.c3 IN 
+    ((SELECT categorie FROM Catégorie WHERE id =B.c3) IN 
         (
             SELECT s1 FROM timetable_categories WHERE id == B.id            UNION 
             SELECT s2 FROM timetable_categories WHERE id == B.id            UNION 
@@ -232,7 +262,7 @@ SELECT
             SELECT s6 FROM timetable_categories WHERE id == B.id            
         )
     ) c3_visited,  
-    (B.c4 IN 
+    ((SELECT categorie FROM Catégorie WHERE id =B.c4) IN 
         (
             SELECT s1 FROM timetable_categories WHERE id == B.id            UNION 
             SELECT s2 FROM timetable_categories WHERE id == B.id            UNION 
@@ -242,7 +272,7 @@ SELECT
             SELECT s6 FROM timetable_categories WHERE id == B.id            
         )
     ) c4_visited, 
-    (B.c5 IN 
+    ((SELECT categorie FROM Catégorie WHERE id =B.c5) IN 
         (
             SELECT s1 FROM timetable_categories WHERE id == B.id            UNION 
             SELECT s2 FROM timetable_categories WHERE id == B.id            UNION 
@@ -255,33 +285,63 @@ SELECT
       
 FROM Student B
 /* VIEW_STUDENT_SATISFACTION(nom,c1,c2,c3,c4,c5,c1_visited,c2_visited,c3_visited,c4_visited,c5_visited) */;
-CREATE VIEW VIEW_TIMETABLE_INTERVENANTS AS WITH confirmed_intervenants AS (
-    SELECT * FROM Intervenants WHERE confirm = 'true' ORDER BY categori
+CREATE VIEW VIEW_TIMETABLE_INTERVENANTS_STUDENTS_PER_SLOT AS WITH 
+slot0(intervenant, slot0) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot0) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot0
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot0
+),
+slot1(intervenant, slot1) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot1) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot1
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot1
+),
+slot2(intervenant, slot2) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot2) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot2
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot2
+),
+slot3(intervenant, slot3) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot3) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot3
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot3
+),
+slot4(intervenant, slot4) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot4) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot4
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot4
+),
+slot5(intervenant, slot5) AS (
+    SELECT (SELECT nom FROM Intervenants WHERE Intervenants.id_timetable = slot5) intervenant,
+           GROUP_CONCAT(Student.nom,CHAR(10)) slot5
+      FROM Timetable
+      LEFT JOIN Student ON (Timetable.groupe_id = Student.id)
+      GROUP BY Timetable.slot5
 )
 
-SELECT 
-    A.nom || CHAR(13) || CHAR (10) || A.titre || CHAR(13) || CHAR(10) ||'Salle :' ||  A.salle Intervenants,
-    A.id_timetable,
-    A.categori,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot0 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot0 = A.id_timetable) END Slot_0,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot1 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot1 = A.id_timetable) END Slot_1,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot2 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot2 = A.id_timetable) END Slot_2,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot3 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot3 = A.id_timetable) END Slot_3,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot4 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot4 = A.id_timetable) END Slot_4,
-    CASE WHEN (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot5 = A.id_timetable) =0 THEN 'NULL' ELSE (SELECT COUNT(*) FROM Timetable WHERE Timetable.slot5 = A.id_timetable) END Slot_5
 
-FROM confirmed_intervenants A
-/* VIEW_TIMETABLE_INTERVENANTS(Intervenants,id_timetable,categori,Slot_0,Slot_1,Slot_2,Slot_3,Slot_4,Slot_5) */;
-CREATE VIEW VIEW_STUDENT_CHOICES AS SELECT
- A.id,
- A.nom,
- (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c1) C1,
- (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c2) C2,
- (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c3) C3,
- (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c4) C4,
- (SELECT categorie FROM Catégorie WHERE Catégorie.id=A.c5) C5 
-FROM STUDENT A
-/* VIEW_STUDENT_CHOICES(id,nom,C1,C2,C3,C4,C5) */;
-CREATE VIEW VIEW_EXPORT_STUDENT_WISHES_JSON AS SELECT '{"id" : ' || A.id || ', "wishes" : [' || A.c1 || ',' || A.c2 || ',' || A.c3 || ',' || A.c4 || ',' || A.c5 || '], "itv_visited" : [] },' json_data
-  FROM STUDENT A
-/* VIEW_EXPORT_STUDENT_WISHES_JSON(json_data) */;
+SELECT 
+    slot0.intervenant, 
+    slot0.slot0, 
+    slot1.slot1, 
+    slot2.slot2, 
+    slot3.slot3, 
+    slot4.slot4, 
+    slot5.slot5
+  FROM slot0
+  LEFT JOIN slot1 ON (slot0.intervenant = slot1.intervenant)
+  LEFT JOIN slot2 ON (slot0.intervenant = slot2.intervenant)  
+  LEFT JOIN slot3 ON (slot0.intervenant = slot3.intervenant)
+  LEFT JOIN slot4 ON (slot0.intervenant = slot4.intervenant)
+  LEFT JOIN slot5 ON (slot0.intervenant = slot5.intervenant)
+/* VIEW_TIMETABLE_INTERVENANTS_STUDENTS_PER_SLOT(intervenant,slot0,slot1,slot2,slot3,slot4,slot5) */;
